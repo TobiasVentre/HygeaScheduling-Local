@@ -4,6 +4,8 @@ namespace SchedulingMS.Domain.Entities;
 
 public class Reservation
 {
+    private Reservation() { }
+
     public Guid Id { get; private set; } = Guid.NewGuid();
     public int ClientId { get; private set; }
     public int TechnicianId { get; private set; }
