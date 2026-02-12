@@ -21,12 +21,25 @@ var app = builder.Build();
 
 app.UseMiddleware<GlobalExceptionMiddleware>();
 
-if (app.Environment.IsDevelopment())
+var swaggerEnabled = app.Configuration.GetValue("Swagger:Enabled", true);
+if (swaggerEnabled)
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "SchedulingMS API v1");
+        c.RoutePrefix = "swagger";
+        c.DocumentTitle = "SchedulingMS - Swagger UI";
+    });
+
+    app.MapGet("/", () => Results.Redirect("/swagger"));
 }
 
-app.UseHttpsRedirection();
+var useHttpsRedirection = app.Configuration.GetValue("Http:UseHttpsRedirection", false);
+if (useHttpsRedirection)
+{
+    app.UseHttpsRedirection();
+}
+
 app.MapControllers();
 app.Run();
