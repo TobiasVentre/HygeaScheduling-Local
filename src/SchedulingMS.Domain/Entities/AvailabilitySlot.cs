@@ -2,6 +2,8 @@ namespace SchedulingMS.Domain.Entities;
 
 public class AvailabilitySlot
 {
+    private AvailabilitySlot() { }
+
     public Guid Id { get; private set; } = Guid.NewGuid();
     public int TechnicianId { get; private set; }
     public DateTime StartAtUtc { get; private set; }

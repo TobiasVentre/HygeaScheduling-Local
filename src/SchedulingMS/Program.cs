@@ -1,6 +1,8 @@
+using Microsoft.EntityFrameworkCore;
 using SchedulingMS.Application.Interfaces;
 using SchedulingMS.Application.UseCases;
 using SchedulingMS.Infrastructure.Events;
+using SchedulingMS.Infrastructure.Persistence;
 using SchedulingMS.Infrastructure.Repositories;
 using SchedulingMS.Middleware;
 
@@ -10,14 +12,23 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<IAvailabilityRepository, InMemoryAvailabilityRepository>();
-builder.Services.AddScoped<IReservationRepository, InMemoryReservationRepository>();
+builder.Services.AddDbContext<SchedulingDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddScoped<IAvailabilityRepository, SqlAvailabilityRepository>();
+builder.Services.AddScoped<IReservationRepository, SqlReservationRepository>();
 builder.Services.AddScoped<IAvailabilityService, AvailabilityService>();
 builder.Services.AddScoped<IReservationService, ReservationService>();
 builder.Services.AddSingleton<IEventPublisher, NoOpEventPublisher>();
 builder.Services.AddSingleton<ITechnicianDirectoryGateway, InMemoryTechnicianDirectoryGateway>();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<SchedulingDbContext>();
+    dbContext.Database.Migrate();
+}
 
 app.UseMiddleware<GlobalExceptionMiddleware>();
 
