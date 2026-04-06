@@ -2,7 +2,13 @@ namespace SchedulingMS.Domain.Enums;
 
 public enum ReservationStatus
 {
-    Confirmed = 1,
-    Finalized = 2,
-    Cancelled = 3
+    Created = 1,
+    Confirmed = 2,
+    InProgress = 3,
+    Finalized = 4,
+    Exception = 5,
+    Closed = 6,
+    Approved = 7
 }
+
+

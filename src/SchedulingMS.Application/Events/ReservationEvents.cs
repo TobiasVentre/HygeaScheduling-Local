@@ -2,20 +2,28 @@ using SchedulingMS.Domain.Enums;
 
 namespace SchedulingMS.Application.Events;
 
-public record ReservationCreatedEvent(
-    Guid ReservationId,
-    int ClientId,
-    int TechnicianId,
-    Guid ServiceId,
-    DateTime ScheduledAt,
-    ReservationStatus Status,
-    DateTime OccurredAt);
+public abstract record ReservationEvent(Guid ReservationId, DateTime OccurredAtUtc);
 
-public record ReservationFinalizedEvent(
+public sealed record ReservationCreatedEvent(
     Guid ReservationId,
-    int ClientId,
-    int TechnicianId,
+    Guid ClientId,
+    Guid ProviderEntityId,
     Guid ServiceId,
-    DateTime ScheduledAt,
-    ReservationStatus Status,
-    DateTime OccurredAt);
+    Guid TechnicianId,
+    DateTime StartAtUtc,
+    DateTime EndAtUtc,
+    DateTime OccurredAtUtc) : ReservationEvent(ReservationId, OccurredAtUtc);
+
+public sealed record ReservationReassignedEvent(
+    Guid ReservationId,
+    Guid PreviousTechnicianId,
+    Guid NewTechnicianId,
+    DateTime OccurredAtUtc) : ReservationEvent(ReservationId, OccurredAtUtc);
+
+public sealed record ReservationStatusChangedEvent(
+    Guid ReservationId,
+    ReservationStatus PreviousStatus,
+    ReservationStatus NewStatus,
+    DateTime OccurredAtUtc) : ReservationEvent(ReservationId, OccurredAtUtc);
+
+
