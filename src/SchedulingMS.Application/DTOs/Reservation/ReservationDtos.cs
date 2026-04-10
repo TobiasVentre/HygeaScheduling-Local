@@ -17,4 +17,10 @@ public record ReservationResponse(
     ReservationStatus Status,
     DateTime CreatedAtUtc);
 
+public record ReservationBusyPeriodResponse(
+    Guid TechnicianId,
+    DateTime StartAtUtc,
+    DateTime EndAtUtc,
+    ReservationStatus Status);
+
 

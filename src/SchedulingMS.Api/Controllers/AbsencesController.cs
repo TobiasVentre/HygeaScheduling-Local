@@ -40,7 +40,7 @@ public class AbsencesController(
     }
 
     [HttpGet("technician/{technicianId:guid}")]
-    [Authorize(Policy = SecurityConstants.Policies.TechnicianOnly)]
+    [Authorize(Policy = SecurityConstants.Policies.ClientOrTechnicianOrProviderAdminOrAdmin)]
     public async Task<ActionResult<IReadOnlyCollection<AbsenceResponse>>> GetByTechnicianAndRange(
         Guid technicianId,
         [FromQuery] DateTime fromUtc,

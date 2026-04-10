@@ -62,6 +62,27 @@ public class ReservationsController(
         return Ok(result);
     }
 
+    [HttpGet("technician/{technicianId:guid}/busy-periods")]
+    [Authorize(Policy = SecurityConstants.Policies.ClientOrTechnicianOrProviderAdminOrAdmin)]
+    public async Task<ActionResult<IReadOnlyCollection<ReservationBusyPeriodResponse>>> GetBusyPeriodsByTechnician(Guid technicianId, CancellationToken cancellationToken)
+    {
+        var result = await getReservationsByTechnicianUseCase.ExecuteAsync(technicianId, cancellationToken);
+
+        var busyPeriods = result
+            .Where(static reservation => reservation.Status is Domain.Enums.ReservationStatus.Created
+                or Domain.Enums.ReservationStatus.Approved
+                or Domain.Enums.ReservationStatus.Confirmed
+                or Domain.Enums.ReservationStatus.InProgress)
+            .Select(reservation => new ReservationBusyPeriodResponse(
+                reservation.TechnicianId,
+                reservation.StartAtUtc,
+                reservation.EndAtUtc,
+                reservation.Status))
+            .ToArray();
+
+        return Ok(busyPeriods);
+    }
+
     [HttpGet("overview")]
     [Authorize(Policy = SecurityConstants.Policies.ProviderAdminOrAdmin)]
     public async Task<ActionResult<ReservationOverviewResponse>> GetOverview(

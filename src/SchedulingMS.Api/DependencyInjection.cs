@@ -93,6 +93,12 @@ public static class DependencyInjection
                 policy.RequireRole(SecurityConstants.Roles.Technician));
             options.AddPolicy(SecurityConstants.Policies.ClientOnly, policy =>
                 policy.RequireRole(SecurityConstants.Roles.Client));
+            options.AddPolicy(SecurityConstants.Policies.ClientOrTechnicianOrProviderAdminOrAdmin, policy =>
+                policy.RequireRole(
+                    SecurityConstants.Roles.Client,
+                    SecurityConstants.Roles.Technician,
+                    SecurityConstants.Roles.ProviderAdmin,
+                    SecurityConstants.Roles.Admin));
         });
 
         services.AddCors(options =>

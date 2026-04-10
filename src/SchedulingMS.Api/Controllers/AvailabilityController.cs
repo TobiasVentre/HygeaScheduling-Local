@@ -40,7 +40,7 @@ public class AvailabilityController(
     }
 
     [HttpGet("technician/{technicianId:guid}")]
-    [Authorize(Policy = SecurityConstants.Policies.TechnicianOnly)]
+    [Authorize(Policy = SecurityConstants.Policies.ClientOrTechnicianOrProviderAdminOrAdmin)]
     public async Task<ActionResult<IReadOnlyCollection<AvailabilityResponse>>> GetByTechnicianAndRange(
         Guid technicianId,
         [FromQuery] DateTime fromUtc,

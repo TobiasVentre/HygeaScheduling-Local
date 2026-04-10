@@ -16,5 +16,6 @@ public static class SecurityConstants
         public const string ProviderAdminOrAdmin = "ProviderAdminOrAdmin";
         public const string TechnicianOnly = "TechnicianOnly";
         public const string ClientOnly = "ClientOnly";
+        public const string ClientOrTechnicianOrProviderAdminOrAdmin = "ClientOrTechnicianOrProviderAdminOrAdmin";
     }
 }
